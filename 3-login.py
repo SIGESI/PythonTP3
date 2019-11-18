@@ -1,4 +1,11 @@
 import getpass
+import os
+
+'''
+il faut utiliser console pour ouvrir le projet
+#pycharm 'run' ne fonctione pas
+'''
+
 
 
 def enregistrer():
@@ -6,9 +13,16 @@ def enregistrer():
         try:
             nomFichier = str(input("Entrez le nom de fichier du login： "))
             fichier = open(nomFichier, "a")
+
+            if os.path.exists(nomFichier):
+                fichier.seek(0)
+                fichier.truncate()
+
             fichier.write( str(input("Entrez le login : \n")))
             pwd=getpass.getpass("Entrez le mot de pass : \n")
-            fichier.write("\n" + pwd)
+            hashPwd=str(hash(pwd))
+            fichier.write("\n" + hashPwd)
+
         except OSError as err:
             print("OS error: {0}".format(err))
         else:
@@ -23,7 +37,7 @@ def verifier():
 
             fichier = open('login.txt', "r")
             lines = fichier.readlines()
-            lines[0]=lines[0].strip('\n')
+            lines[0]=lines[0].strip('\n')  #readlines include '\n'
             lines[1]=lines[1].strip('\n')
 
             if input_login==lines[0] and input_password==lines[1]:
@@ -36,7 +50,9 @@ def verifier():
         else:
             fichier.close()
             break
-
+'''
+login menu 
+'''
 def main():
     print("2. Enregistrer le mot de passe")
     print('3. Vérifier le mot de passe')
